@@ -37,14 +37,27 @@ namespace TechJobs.Controllers
             // new Job and add it to the JobData data store. Then
             // redirect to the Job detail (Index) action/view for the new Job.
 
-            //Utilize the invalid method of ModelState class. check if it is indeed valid
-            //if it is valid . . .
-            //Create an instance of job passing in appropriate parameters
-            //Add a new job to the Jobs property of the jobData instance
-            //then if it is still true, return a redirect to its appropriate place
+            //Utilize the isValid method of ModelState class. check if it is indeed valid
+            if (ModelState.IsValid)
+            //if it is valid . .
+            {
+                //Create an instance of job passing in appropriate parameters
+                Job newJob = new Job
+                //Add a new job to the Jobs property of the jobData instance
+                {
+                    Name = newJobViewModel.Name,
+                    CoreCompetency = jobData.CoreCompetencies.Find(newJobViewModel.CoreCompetencyID),
+                    Employer = jobData.Employers.Find(newJobViewModel.EmployerID),
+                    Location = jobData.Locations.Find(newJobViewModel.LocationID),
+                    PositionType = jobData.PositionTypes.Find(newJobViewModel.PositionTypeID)
+                };
+                jobData.Jobs.Add(newJob);
+                //then if it is still true, return a redirect to its appropriate place
+
+                return Redirect($"/job?id={newJob.ID}");
+            }
             //if its not valid . . .
             //do what I'm doing below
-
             return View(newJobViewModel);
         }
     }
